@@ -54,11 +54,9 @@ spec:
             export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS \
               -Dspark.history.fs.logDirectory=$logDirectory \
               -Dspark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem";
-            if [ "$enableIAM" == "false" ]; then
-              export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS \
-              -Dspark.hadoop.fs.s3a.access.key=$(cat /etc/secrets/${accessKeyName}) \
-              -Dspark.hadoop.fs.s3a.secret.key=$(cat /etc/secrets/${secretKeyName})";
-            fi;
+            export SPARK_HISTORY_OPTS="$SPARK_HISTORY_OPTS \
+              -Dspark.hadoop.fs.s3a.access.key=AKIAS3PJIV3N3A \
+              -Dspark.hadoop.fs.s3a.secret.key=E4GUxhir9uOgKTQ33uyJ3pRS4kVawTG4W4Pt";
           elif [ "$enableWASBS" == "true" ]; then
             container=$(cat /etc/secrets/${containerKeyName})
             storageAccount=$(cat /etc/secrets/${storageAccountNameKeyName})
@@ -84,14 +82,6 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ include "spark-history-server.fullname" . }}
-        livenessProbe:
-          httpGet:
-            path: /
-            port: historyport
-        readinessProbe:
-          httpGet:
-            path: /
-            port: historyport
         {{- if .Values.pvc.enablePVC }}
         volumeMounts:
         - name: data

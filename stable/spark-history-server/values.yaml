@@ -7,15 +7,15 @@ rbac:
 
 serviceAccount:
   create: true
-  name:
+  name: sa
 
 image:
-  repository: lightbend/spark-history-server
-  tag: 2.4.0
-  pullPolicy: IfNotPresent
+  repository: liubarnabas/sparkhs 
+  tag: latest
+  pullPolicy: Always
 
 service:
-  type: LoadBalancer
+  type: NodePort
   port: 18080
   annotations: {}
 
@@ -62,7 +62,7 @@ pvc:
   # to use a file system path for Spark events dir, set 'enablePVC' to true and mention the
   # name of an already created persistent volume claim in existingClaimName.
   # The volume will be mounted on /data in the pod
-  enablePVC: true
+  enablePVC: false
   existingClaimName: nfs-pvc
   eventsDir: "/"
 
@@ -70,7 +70,7 @@ pvc:
 # When pvc.enablePVC is true, make sure:
 # pvc.existingClaimName == nfs.pvcName
 nfs:
-  enableExampleNFS: true
+  enableExampleNFS: false
   pvName: nfs-pv
   pvcName: nfs-pvc
 
@@ -87,7 +87,7 @@ hdfs:
   HADOOP_CONF_DIR: /etc/hadoop
 
 s3:
-  enableS3: false
+  enableS3: true
   enableIAM: true
   # Omit for IAM role-based or provider-based authentication.
   secret: aws-secrets
@@ -95,7 +95,7 @@ s3:
   accessKeyName: aws-access-key
   # secretKey is AWS secret key. Omit for IAM role-based or provider-based authentication.
   secretKeyName: aws-secret-key
-  logDirectory: s3a://spark-hs/
+  logDirectory: s3a://spark-bucket-hs/
 
 wasbs:
   enableWASBS: false
